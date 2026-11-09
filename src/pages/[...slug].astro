@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import pages from '../data/pages.json';
+import pricingWidget from '../widgets/local-pricing.html?raw';
+export function getStaticPaths() {
+  return pages.map(page=>({params:{slug:page.slug},props:{page}}));
+}
+const {page}=Astro.props;
+const guides=pages.filter(p=>p.type==='guide'&&p.slug!==page.slug).slice(0,4);
+const isLegal=page.type==='legal';
+---
+<Base title={page.title} description={page.description} path={'/'+page.slug+'/'}>
+  <section class:list={['article-hero',{'legal-hero':isLegal}]}>
+    <div class="container article-hero-inner">
+      <p class="eyebrow">{isLegal?'SITE INFORMATION':'UK WINDOW CLEANING PRICE GUIDE'}</p>
+      <h1>{page.heading}</h1>
+      {page.intro.length ? <p class="article-intro">{page.intro.join(' ')}</p> : <p class="article-intro">{page.description}</p>}
+      {!isLegal && <a class="button button-primary" href="/#calculator">Calculate your price <span aria-hidden="true">→</span></a>}
+    </div>
+  </section>
+  <div class="container article-shell">
+    <article class="article-content">
+      {page.priceLookup && <section class="local-lookup" aria-label="Check window cleaning prices by postcode"><h2>Check a local price</h2><p>Enter a UK postcode to see the same area's indicative market guidance used by our calculator.</p><div set:html={pricingWidget} /></section>}
+      {page.sections.map((section,i)=><section class="content-section" aria-labelledby={'section-'+i}>
+        {section.heading && <h2 id={'section-'+i}>{section.heading}</h2>}
+        {section.blocks.map((block)=>
+          block.type==='subhead'?<h3>{block.text}</h3>:
+          block.type==='bullet'?<ul class="article-list"><li>{block.text}</li></ul>:
+          <p>{block.text}</p>
+        )}
+      </section>)}
+      {!isLegal && <div class="article-end"><p class="eyebrow">READY TO CHECK YOUR OWN PROPERTY?</p><h2>Get a free estimate in minutes.</h2><p>Our calculator covers the details that can make two otherwise similar homes cost very different amounts.</p><a class="button button-primary" href="/#calculator">Use the calculator →</a></div>}
+    </article>
+    <aside class="article-aside" aria-label="Useful links">
+      <div class="aside-card"><h2>{isLegal?'Legal information':'Quick links'}</h2><a href="/#calculator">Free calculator →</a><a href="/window-cleaning-prices-uk/">Window cleaning prices →</a><a href="/window-cleaning-prices-uk/how-we-calculate-prices/">How we calculate →</a></div>
+      {!isLegal && <p class="aside-note">Prices are estimated guidance and can differ from an on-site quotation.</p>}
+    </aside>
+  </div>
+  {!isLegal && <section class="section section-tinted"><div class="container"><div class="section-title"><p class="eyebrow">KEEP READING</p><h2>More pricing guides</h2></div><div class="guide-grid related-grid">{guides.map(g=><a class="guide-card" href={'/'+g.slug+'/'}><h3>{g.heading}</h3><p>{g.description}</p><span class="card-arrow">Read guide →</span></a>)}</div></div></section>}
+</Base>

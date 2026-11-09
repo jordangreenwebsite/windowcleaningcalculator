@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+.env*
+!.env.example
+public/assets/
+public/wcc-sw.js
+public/wcc-manifest.webmanifest
+public/wcc-icon-192.png
+public/wcc-icon-512.png
+public/wcc-apple-touch-icon.png

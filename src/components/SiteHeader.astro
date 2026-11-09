@@ -1,0 +1,43 @@
+---
+const pricing='/window-cleaning-prices-uk/';
+---
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="Window Cleaning Calculator home">
+      <img src="/assets/logo.png" width="44" height="44" alt="" loading="eager" decoding="async" />
+      <span><strong>Window Cleaning</strong><small>Calculator</small></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Main navigation">
+      <a href="/#calculator">Calculator</a>
+      <a href={pricing}>UK prices</a>
+      <details class="menu-details">
+        <summary>Price guides <span aria-hidden="true">⌄</span></summary>
+        <div class="dropdown-panel">
+          <a href={pricing+'window-cleaning-cost-per-window/'}>Cost per window</a>
+          <a href={pricing+'window-cleaning-prices-by-property-type/'}>By property type</a>
+          <a href={pricing+'window-cleaning-prices-by-area/'}>By location</a>
+          <a href={pricing+'first-window-cleaning-cost/'}>First clean</a>
+          <a href={pricing+'one-off-window-cleaning-cost/'}>One-off cleaning</a>
+          <a href={pricing+'inside-window-cleaning-cost/'}>Inside windows</a>
+          <a href={pricing+'conservatory-cleaning-cost/'}>Conservatories</a>
+          <a href={pricing+'conservatory-roof-cleaning-cost/'}>Conservatory roofs</a>
+          <a href={pricing+'commercial-window-cleaning-cost/'}>Commercial</a>
+          <a href={pricing+'how-we-calculate-prices/'}>Our methodology</a>
+        </div>
+      </details>
+    </nav>
+    <a class="nav-cta" href="/#calculator">Get an estimate <span aria-hidden="true">→</span></a>
+    <details class="mobile-menu">
+      <summary aria-label="Open site navigation">Menu <span aria-hidden="true">☰</span></summary>
+      <nav aria-label="Mobile navigation">
+        <a href="/#calculator">Calculator</a>
+        <a href={pricing}>Window cleaning prices</a>
+        <a href={pricing+'window-cleaning-cost-per-window/'}>Cost per window</a>
+        <a href={pricing+'window-cleaning-prices-by-area/'}>Prices by area</a>
+        <a href={pricing+'window-cleaning-prices-by-property-type/'}>Property types</a>
+        <a href={pricing+'conservatory-cleaning-cost/'}>Conservatories</a>
+        <a href={pricing+'how-we-calculate-prices/'}>How pricing works</a>
+      </nav>
+    </details>
+  </div>
+</header>
