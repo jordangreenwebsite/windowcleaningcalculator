@@ -1,0 +1,25 @@
+name: Astro migration verification
+on:
+  push:
+    branches:
+      - astro-migration
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and verify static site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm install --no-audit --no-fund
+      - run: npm run build
