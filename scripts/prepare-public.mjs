@@ -1,22 +1,32 @@
-import {mkdirSync,copyFileSync,existsSync,readFileSync,writeFileSync} from 'node:fs';
+import {cpSync, mkdirSync, copyFileSync, existsSync, readFileSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
-const root=process.cwd(),pub=join(root,'public');
-mkdirSync(pub,{recursive:true});mkdirSync(join(pub,'assets'),{recursive:true});
-const assets={
-  'wcc-sw.js':'wcc-sw.js',
-  'wcc-manifest.webmanifest':'wcc-manifest.webmanifest',
-  'wcc-icon-192.png':'wcc-icon-192.png',
-  'wcc-icon-512.png':'wcc-icon-512.png',
-  'wcc-apple-touch-icon.png':'wcc-apple-touch-icon.png',
-  'assets/logo.png':'wp-content/uploads/2026/08/Window-Cleaning-Calculator-Small-Logo-Transparent-150x150.png'
-};
-for(const [target,source] of Object.entries(assets)){
-  const from=join(root,source),to=join(pub,target);
-  if(!existsSync(from))throw new Error('Missing required legacy asset: '+source);
-  if(target==='wcc-sw.js') {
-    // Force clients of the old WordPress export to refresh cached site assets on migration.
-    const sw=readFileSync(from,'utf8').replace(/wcc-pwa-v1\.4\.1/g,'wcc-pwa-v2.0.0-astro');
-    writeFileSync(to,sw);
-  } else copyFileSync(from,to);
+
+const root=process.cwd(), pub=join(root,'public');
+mkdirSync(pub,{recursive:true});
+
+// The pre-migration site's original visual assets. Preserve all exact CSS,
+// images and small Breakdance runtime files while an Astro-native component
+// decomposition is performed behind a pixel-parity gate.
+const assetFolders=[
+  'wp-content/uploads',
+  'wp-content/plugins/breakdance'
+];
+for (const source of assetFolders) {
+  const from=join(root,source),to=join(pub,source);
+  if (!existsSync(from)) throw new Error('Missing original design assets: '+source);
+  cpSync(from,to,{recursive:true,force:true});
 }
-console.log('Prepared '+Object.keys(assets).length+' local icon/PWA assets.');
+// Original sitemap presentation and PWA assets.
+const individual=[
+  'wcc-manifest.webmanifest','wcc-icon-192.png',
+  'wcc-icon-512.png','wcc-apple-touch-icon.png',
+  'sitemap_index.xml','page-sitemap.xml','main-sitemap.xsl'
+];
+for (const source of individual) {
+  if (!existsSync(join(root,source))) throw new Error('Missing original asset: '+source);
+  copyFileSync(join(root,source),join(pub,source));
+}
+const sw=readFileSync(join(root,'wcc-sw.js'),'utf8')
+  .replace(/wcc-pwa-v1\.4\.1/g,'wcc-pwa-v2.1.0-original-visual');
+writeFileSync(join(pub,'wcc-sw.js'),sw);
+console.log('Original site assets, CSS, PWA and sitemap resources prepared.');

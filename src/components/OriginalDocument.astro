@@ -1,0 +1,9 @@
+---
+import {readFileSync} from 'node:fs';
+import {join} from 'node:path';
+const {originalPath} = Astro.props;
+// Full original source, including linked styles/scripts and the original calculator.
+// Rendering unaltered HTML is deliberate: parity before architectural refactoring.
+const html=readFileSync(join(process.cwd(),originalPath),'utf8');
+---
+<Fragment set:html={html} />
