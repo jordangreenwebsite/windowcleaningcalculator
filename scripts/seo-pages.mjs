@@ -91,10 +91,20 @@ function patchMarkup(markup){
  changed=changed.replace(/<header\b[^>]*>[\s\S]*?<\/header\s*>/gi,part=>part.replace(/<\/?h1\b/gi,m=>m.replace(/h1/i,'h2')));
  changed=changed.replace(/<footer\b[^>]*>[\s\S]*?<\/footer\s*>/gi,part=>part.replace(/<\/?h1\b/gi,m=>m.replace(/h1/i,'h2')));
  changed=changed.replace(/<img\b[^>]*>/gi,tag=>{
-  if(/\balt\s*=/i.test(tag))return tag; // respect deliberately empty decorative alt
-  const src=tag.match(/\bsrc=["']([^"']+)["']/i)?.[1];
-  if(!src)throw new Error('Image without src or alt: '+tag.slice(0,100));
-  return tag.replace(/>$/, ' alt="'+escapeHtml(imageAlt(src))+'">');
+  const source=tag.match(/\bsrc=["']([^"']+)["']/i)?.[1]||'';
+  // Original branding, served in appropriately sized copies. No layout or CSS changes.
+  if(/Logo-in-circle\.png/i.test(source)){
+    tag=tag.replace(/(\bsrc=["'][^"']*)Logo-in-circle\.png/i,'$1Logo-in-circle-300x300.png');
+    if(!/\bloading\s*=/i.test(tag))tag=tag.replace(/>$/,' loading="lazy">');
+  }
+  if(/Window-Cleaning-Calculator-small-full-screen-Logo-transaprent/i.test(source)||/UK-TRADE-WEbsites/i.test(source)){
+    tag=tag.replace(/\bsizes=["'][^"']+["']/i,'sizes="85px"');
+  } else if(/Window-Cleaning-Calculator-Full-Logo-Transaprent-Background/i.test(source)){
+    tag=tag.replace(/\bsizes=["'][^"']+["']/i,'sizes="150px"');
+  }
+  if(/\balt\s*=/i.test(tag))return tag; // deliberate decorative empty alts remain
+  if(!source)throw new Error('Image without src or alt: '+tag.slice(0,100));
+  return tag.replace(/>$/, ' alt="'+escapeHtml(imageAlt(source))+'">');
  });
  return changed;
 }

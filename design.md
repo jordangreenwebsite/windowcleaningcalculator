@@ -39,3 +39,5 @@ This project is its own product, not part of J Piper Cleaning.
 - Keep the original CSS, fonts, DOM text, JS logic, image dimensions, calculator and local price checker stable. The SEO verifier enforces non-regression.
 - Do not invent a LocalBusiness address, telephone, opening hours, review scores, social profiles or service locations solely for a third-party audit score. This is a nationwide online calculator, not a local window-cleaning contractor.
 - Fix the broken old links at build time, retain redirects, real SEO article dates (if published on original source), one heading per page, and genuine structured data.
+
+- Original site image artwork is unchanged. Use existing 300px circular logo for mobile navigation and accurate `sizes` hints for the 85px header/credit logo and 150px footer logo. This affects resource download size only, not layout, CSS or price calculator logic.
