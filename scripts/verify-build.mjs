@@ -1,7 +1,8 @@
 import {readFileSync,existsSync} from 'node:fs';
 import {join} from 'node:path';
 import pages from '../src/data/pages.json' with {type:'json'};
-const all=['/',...pages.map(p=>'/'+p.slug+'/')];let problems=[];
+const newGuide='/window-cleaning-prices-uk/how-often-should-windows-be-cleaned/';
+const all=['/',newGuide,...pages.map(p=>'/'+p.slug+'/')];let problems=[];
 for(const path of all){
  const file=join('dist',path,'index.html'),html=existsSync(file)?readFileSync(file,'utf8'):'';
  if(!html){problems.push('Missing '+file);continue;}
@@ -19,5 +20,15 @@ for(const file of ['dist/index.html','dist/window-cleaning-prices-uk/index.html'
  if(file==='dist/index.html'&&!html.includes('id="wcc-app"'))problems.push('Missing main calculator in output');
  if(file!=='dist/index.html'&&!html.includes('id="wcpl-app"'))problems.push('Missing local price widget in output');
 }
-if(problems.length){console.error(problems.join('\n'));process.exit(1);}
+const sitemap=readFileSync('dist/sitemap.xml','utf8');
+if(!sitemap.includes('<loc>https://windowcleaningcalculator.co.uk'+newGuide+'</loc>')) problems.push('New frequency guide missing from XML sitemap');
+const htmlHome=readFileSync('dist/index.html','utf8');
+if(!htmlHome.includes('href="'+newGuide+'"')) problems.push('New guide is not linked from homepage');
+const guideHtml=readFileSync(join('dist',newGuide,'index.html'),'utf8');
+for (const word of ['Every 4 weeks','Every 6 weeks','Every 8 weeks','Every 12 weeks','One-off clean']) {
+ if(!guideHtml.includes(word)) problems.push('New guide is missing '+word);
+}
+const header=readFileSync('src/components/SiteHeader.astro','utf8');
+if(!header.includes("how-often-should-windows-be-cleaned/")) problems.push('New guide is not in navigation');
+if(problems.length){console.error(problems.join('\\n'));process.exit(1);}
 console.log('Astro static output verified: '+all.length+' routes, calculator, local price widget, PWA and redirects.');

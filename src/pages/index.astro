@@ -3,14 +3,15 @@ import Base from '../layouts/Base.astro';
 import pages from '../data/pages.json';
 import calculator from '../widgets/calculator.html?raw';
 const guides=pages.filter(page=>page.type==='guide');
+const freshGuide={slug:'window-cleaning-prices-uk/how-often-should-windows-be-cleaned',heading:'How Often Should Windows Be Cleaned?',description:'Compare four-, six-, eight- and twelve-weekly cleaning, and see how frequency affects estimated prices.'};
 const featured=[
  'window-cleaning-prices-uk',
  'window-cleaning-prices-uk/window-cleaning-cost-per-window',
  'window-cleaning-prices-uk/window-cleaning-prices-by-area',
- 'window-cleaning-prices-uk/first-window-cleaning-cost',
+ 'window-cleaning-prices-uk/how-often-should-windows-be-cleaned',
  'window-cleaning-prices-uk/inside-window-cleaning-cost',
  'window-cleaning-prices-uk/conservatory-cleaning-cost'
-].map(slug=>guides.find(page=>page.slug===slug)).filter(Boolean);
+].map(slug=>guides.find(page=>page.slug===slug) || (slug===freshGuide.slug?freshGuide:null)).filter(Boolean);
 ---
 <Base title="Window Cleaning Cost Calculator UK | Free Local Estimates" description="Free UK window cleaning cost calculator. Compare local prices by postcode, window type, property, frequency, access and conservatory requirements." path="/">
   <section class="home-hero">
