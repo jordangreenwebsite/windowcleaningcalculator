@@ -76,11 +76,14 @@ function outsideScripts(markup,fn) {
  }
  return result+fn(markup.slice(cursor));
 }
-function patchMarkup(markup){
+function patchMarkup(markup,route){
  let changed=markup;
  // Correct real links, while leaving labels, nodes and classes alone.
  changed=changed.replace(/\bhref=(["'])([^"']+)\1/gi,(whole,quote,href)=>{
   if(href==='http://linkedin.com/')return 'href='+quote+'https://www.linkedin.com/'+quote;
+  // The calculator exists on the homepage only. Footer links on guide/policy pages
+  // used to navigate to a nonexistent same-page fragment.
+  if(href==='#calculator' && route!=='')return 'href='+quote+'/#calculator'+quote;
   const absolute=href.startsWith(BASE);
   const path=absolute?href.slice(BASE.length):href;
   const fixed=Object.keys(LINK_MAP).find(p=>path===p||path.startsWith(p+'#')||path.startsWith(p+'?'));
@@ -113,6 +116,8 @@ function buildSchema({path,title,description,route,dates}){
  const graph=[
   {'@type':'ImageObject','@id':logoId,'url':IMAGE,'contentUrl':IMAGE,'width':2000,'height':2000,'caption':BRAND},
   {'@type':'Organization','@id':orgId,'name':BRAND,'url':BASE+'/','logo':{'@id':logoId},
+   // Nationwide online calculator: this is NOT a local cleaning contractor.
+   'areaServed':{'@type':'Country','name':'United Kingdom'},
    'contactPoint':{'@type':'ContactPoint','contactType':'general enquiries','email':EMAIL}},
   {'@type':'WebSite','@id':websiteId,'url':BASE+'/','name':BRAND,'inLanguage':'en-GB','publisher':{'@id':orgId}}
  ];
@@ -210,7 +215,7 @@ function optimise(html,route){
  const bodyRe=/(<body\b[^>]*>)([\s\S]*?)(<\/body\s*>)/i;
  const bm=result.match(bodyRe);
  if(!bm)throw new Error('Missing body for '+route);
- let content=outsideScripts(bm[2],patchMarkup);
+ let content=outsideScripts(bm[2],part=>patchMarkup(part,route));
  if(['privacy-policy','terms-of-use','cookie-policy','cookie-settings'].includes(route)){
   const heading=route==='privacy-policy'?'Privacy Policy':route==='terms-of-use'?'Terms of Use':route==='cookie-policy'?'Cookie Policy':'Cookie Settings';
   const loc=/<\/header\s*>/i;

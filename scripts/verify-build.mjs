@@ -50,6 +50,16 @@ for(const route of routes){
   }catch(e){errors.push('Unparseable JSON-LD '+path+': '+e.message)}
  }
  if(/windowcleaningcalculator\.local/i.test(stripScripts(rendered)))errors.push('Stale local domain '+path);
+ if(route!==''){
+  const routeMarkup=body(clean);
+  if(/\bhref=["']#calculator["']/i.test(routeMarkup))errors.push('Broken same-page calculator fragment '+path);
+  if(!/\bhref=["']\/#calculator["']/i.test(routeMarkup))errors.push('No link to the real homepage calculator on '+path);
+ }
+ if(schema){
+  const parsed=JSON.parse(schema[1]);
+  const org=parsed['@graph']?.find(x=>x['@type']==='Organization');
+  if(org?.areaServed?.name!=='United Kingdom')errors.push('Organization areaServed missing United Kingdom '+path);
+ }
  const imgs=[...clean.matchAll(/<img\b[^>]*>/gi)].map(m=>m[0]);
  for(const img of imgs){
   if(!/\balt\s*=/i.test(img))errors.push('Image missing alt '+path+' '+img.slice(0,95));
