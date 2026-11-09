@@ -27,6 +27,6 @@ for (const source of individual) {
   copyFileSync(join(root,source),join(pub,source));
 }
 const sw=readFileSync(join(root,'wcc-sw.js'),'utf8')
-  .replace(/wcc-pwa-v1\.4\.1/g,'wcc-pwa-v2.1.0-original-visual');
+  .replace(/wcc-pwa-v1\.4\.1/g,'wcc-pwa-v2.2.0-seo');
 writeFileSync(join(pub,'wcc-sw.js'),sw);
 console.log('Original site assets, CSS, PWA and sitemap resources prepared.');
