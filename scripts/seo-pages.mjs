@@ -194,6 +194,7 @@ function optimise(html,route){
  if(['privacy-policy','terms-of-use','cookie-policy','cookie-settings'].includes(route)){
   tags.push('<style>.seo-accessible-title{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}</style>');
  }
+ if(!/<link\b[^>]*\brel=["']canonical["'][^>]*>/i.test(head))head+='\n<link rel="canonical" href="'+path+'">';
  head+='\n<!-- SEO metadata; original visual design and scripts are preserved -->\n'+tags.join('\n')+'\n';
  let result=html.replace(htmlHead[0],'<head>'+head+'</head>').replace(/<html\b([^>]*)\blang=["'][^"']+["']/i,'<html$1lang="en-GB"');
  const bodyRe=/(<body\b[^>]*>)([\s\S]*?)(<\/body\s*>)/i;

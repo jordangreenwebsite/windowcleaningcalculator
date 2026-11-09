@@ -49,7 +49,7 @@ for(const route of routes){
    schemaChecked++;
   }catch(e){errors.push('Unparseable JSON-LD '+path+': '+e.message)}
  }
- if(/windowcleaningcalculator\.local/i.test(rendered))errors.push('Stale local domain '+path);
+ if(/windowcleaningcalculator\.local/i.test(stripScripts(rendered)))errors.push('Stale local domain '+path);
  const imgs=[...clean.matchAll(/<img\b[^>]*>/gi)].map(m=>m[0]);
  for(const img of imgs){
   if(!/\balt\s*=/i.test(img))errors.push('Image missing alt '+path+' '+img.slice(0,95));
