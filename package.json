@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/prepare-public.mjs && astro dev",
-    "build": "node scripts/prepare-public.mjs && astro build && node scripts/verify-build.mjs",
+    "build": "node scripts/prepare-public.mjs && astro build && node scripts/seo-pages.mjs && node scripts/verify-build.mjs",
     "preview": "astro preview",
-    "check:build": "node scripts/verify-build.mjs"
+    "check:build": "node scripts/seo-pages.mjs && node scripts/verify-build.mjs"
   },
   "dependencies": {
     "astro": "^7.4.7"

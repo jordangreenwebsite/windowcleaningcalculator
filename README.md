@@ -26,3 +26,9 @@ Cloudflare Pages: production branch `main`, Node 22, build `npm run build`, outp
 **This is a visual-parity phase, not the completed clean source refactor.** The original HTML is deliberately left intact. Once the owner verifies the live appearance, progressively extract real reusable Astro header/footer/page components with before/after visual tests. Don't redo the site design.
 
 The rejected newly designed Astro templates and frequency test page were not authorised and have been removed from the output.
+
+## Search optimisation
+
+`scripts/seo-pages.mjs` adds unique meta descriptions, modern JSON-LD, the existing brand logo/favicon, descriptive image alt attributes, corrected internal URLs and semantic headings **without touching original layout or calculator JavaScript**. The subsequent `scripts/verify-build.mjs` checks visual text/CSS/script preservation, links, metadata, schema, images, indexability and robots/sitemap coverage.
+
+Cloudflare may separately manage or override robots.txt and crawler policies. A live fetch of `/robots.txt` and Google Search Console URL Inspection are required after deploy.
