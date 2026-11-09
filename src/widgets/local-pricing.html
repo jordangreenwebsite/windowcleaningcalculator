@@ -1,0 +1,426 @@
+<div id="wcpl-app">
+  <style>
+    #wcpl-app{
+      --navy:#1E3A5F;--blue:#4A6FA5;--orange:#FF8C42;--bg:#F6F8FB;
+      --line:#DCE5EF;--muted:#64748B;--green:#18794E;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--navy);width:100%;
+    }
+    #wcpl-app *{box-sizing:border-box}
+    #wcpl-app .wcpl-card{
+      width:100%;background:#fff;border:1px solid var(--line);border-radius:18px;
+      padding:clamp(18px,3vw,30px);box-shadow:0 12px 35px rgba(30,58,95,.07);
+    }
+    #wcpl-app .wcpl-kicker{
+      color:var(--orange);font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
+      margin:0 0 5px;
+    }
+    #wcpl-app h2{font-size:clamp(26px,4vw,40px);line-height:1.06;margin:0 0 9px;color:var(--navy)}
+    #wcpl-app .wcpl-intro{color:var(--muted);font-size:15px;line-height:1.55;margin:0 0 18px;max-width:760px}
+    #wcpl-app .wcpl-search{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:9px;align-items:stretch}
+    #wcpl-app input{
+      width:100%;min-height:52px;border:1.5px solid #C8D5E4;border-radius:12px;padding:0 15px;
+      font:inherit;font-size:16px;color:#152C4B;background:#fff;outline:none;
+    }
+    #wcpl-app input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(74,111,165,.12)}
+    #wcpl-app button,#wcpl-app .wcpl-linkbtn{
+      min-height:52px;border:0;border-radius:12px;padding:0 17px;font:inherit;font-weight:800;
+      cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+      transition:.16s ease;
+    }
+    #wcpl-app .wcpl-primary{background:var(--navy);color:#fff}
+    #wcpl-app .wcpl-primary:hover{transform:translateY(-1px);background:#16314F}
+    #wcpl-app .wcpl-locate{background:#FFF3EA;color:#9A4A10;border:1px solid #FFD3B5}
+    #wcpl-app .wcpl-locate:hover{background:#FFE9D8}
+    #wcpl-app .wcpl-status{
+      margin-top:9px;padding:10px 12px;border-radius:10px;background:var(--bg);color:var(--muted);
+      font-size:13px;line-height:1.4;
+    }
+    #wcpl-app .wcpl-status.good{background:#ECF8F1;color:var(--green)}
+    #wcpl-app .wcpl-status.warn{background:#FFF7E8;color:#8A5600}
+    #wcpl-app .wcpl-results{display:none;margin-top:22px}
+    #wcpl-app .wcpl-results.show{display:block}
+    #wcpl-app .wcpl-result-head{
+      display:flex;justify-content:space-between;gap:16px;align-items:flex-end;flex-wrap:wrap;
+      padding-bottom:15px;border-bottom:1px solid var(--line)
+    }
+    #wcpl-app .wcpl-result-head h3{font-size:clamp(22px,3vw,30px);margin:0 0 3px}
+    #wcpl-app .wcpl-area{color:var(--muted);font-size:14px}
+    #wcpl-app .wcpl-badge{
+      background:#EEF4FA;color:var(--navy);font-size:12px;font-weight:800;border-radius:999px;padding:7px 10px
+    }
+    #wcpl-app .wcpl-frequency{margin:18px 0 13px}
+    #wcpl-app .wcpl-label{font-weight:800;font-size:13px;margin-bottom:7px}
+    #wcpl-app .wcpl-pills{display:flex;gap:7px;flex-wrap:wrap}
+    #wcpl-app .wcpl-pill{
+      min-height:38px!important;padding:0 12px!important;border:1px solid var(--line)!important;
+      background:#fff!important;color:var(--navy)!important;border-radius:999px!important;font-size:13px!important
+    }
+    #wcpl-app .wcpl-pill.active{background:var(--orange)!important;color:#fff!important;border-color:var(--orange)!important}
+    #wcpl-app .wcpl-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+    #wcpl-app .wcpl-price{
+      padding:14px;border:1px solid var(--line);border-radius:13px;background:#fff;min-width:0
+    }
+    #wcpl-app .wcpl-price-name{font-size:12px;color:var(--muted);margin-bottom:5px;line-height:1.3}
+    #wcpl-app .wcpl-price-value{font-size:23px;font-weight:900;color:var(--navy);line-height:1}
+    #wcpl-app .wcpl-price-note{font-size:10.5px;color:#8996A8;margin-top:5px;line-height:1.3}
+    #wcpl-app .wcpl-minimum{
+      margin:12px 0 0;padding:13px 14px;background:#F0F5FA;border-radius:12px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px
+    }
+    #wcpl-app .wcpl-minimum strong{font-size:20px}
+    #wcpl-app .wcpl-section{margin-top:18px;padding-top:17px;border-top:1px solid var(--line)}
+    #wcpl-app .wcpl-section h4{font-size:17px;margin:0 0 9px}
+    #wcpl-app .wcpl-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    #wcpl-app .wcpl-info{
+      border:1px solid var(--line);border-radius:13px;padding:14px;background:#FBFCFE;
+      color:#455A72;font-size:13px;line-height:1.5
+    }
+    #wcpl-app .wcpl-info strong{color:var(--navy)}
+    #wcpl-app .wcpl-highlight{font-size:20px;font-weight:900;color:var(--navy)}
+    #wcpl-app .wcpl-wales{
+      margin-top:12px;background:#FFF7E8;border:1px solid #F8D79C;border-radius:11px;padding:11px 13px;
+      color:#805200;font-size:12.5px;line-height:1.45
+    }
+    #wcpl-app .wcpl-disclaimer{
+      margin-top:14px;color:#7B8798;font-size:11.5px;line-height:1.45
+    }
+    #wcpl-app .wcpl-footer{
+      margin-top:18px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap
+    }
+    #wcpl-app .wcpl-orange{background:var(--orange);color:#fff}
+    #wcpl-app .wcpl-built{font-size:11.5px;color:#8290A1}
+    #wcpl-app .wcpl-built a{color:var(--navy);font-weight:800;text-decoration:none}
+    @media(max-width:760px){
+      #wcpl-app .wcpl-search{grid-template-columns:1fr 1fr}
+      #wcpl-app .wcpl-search input{grid-column:1/-1}
+      #wcpl-app .wcpl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:430px){
+      #wcpl-app .wcpl-card{padding:16px}
+      #wcpl-app .wcpl-search{grid-template-columns:1fr}
+      #wcpl-app .wcpl-search input{grid-column:auto}
+      #wcpl-app .wcpl-two{grid-template-columns:1fr}
+      #wcpl-app .wcpl-price-value{font-size:21px}
+    }
+  </style>
+
+  <div class="wcpl-card">
+    <p class="wcpl-kicker">LOCAL WINDOW CLEANING PRICES</p>
+    <h2>Check prices in your area</h2>
+    <p class="wcpl-intro">Enter a UK postcode to see a simple local pricing guide using the same regional model as our full calculator. A full postcode gives the most accurate local adjustment.</p>
+
+    <div class="wcpl-search">
+      <input id="wcpl-postcode" type="text" autocomplete="postal-code" placeholder="e.g. GL7 6NH" maxlength="12" aria-label="UK postcode">
+      <button id="wcpl-check" class="wcpl-primary" type="button">Check prices</button>
+      <button id="wcpl-locate" class="wcpl-locate" type="button">📍 Find my location</button>
+    </div>
+    <div id="wcpl-status" class="wcpl-status">You can use a full postcode, an outward code such as GL7, or even just a postcode area such as GL.</div>
+
+    <div id="wcpl-results" class="wcpl-results">
+      <div class="wcpl-result-head">
+        <div>
+          <h3 id="wcpl-title">Typical local pricing</h3>
+          <div id="wcpl-area" class="wcpl-area"></div>
+        </div>
+        <span id="wcpl-market-badge" class="wcpl-badge"></span>
+      </div>
+
+      <div class="wcpl-frequency">
+        <div class="wcpl-label">Cleaning frequency</div>
+        <div class="wcpl-pills">
+          <button type="button" class="wcpl-pill active" data-freq="4">4 weekly</button>
+          <button type="button" class="wcpl-pill" data-freq="6">6 weekly</button>
+          <button type="button" class="wcpl-pill" data-freq="8">8 weekly</button>
+          <button type="button" class="wcpl-pill" data-freq="12">12 weekly</button>
+        </div>
+      </div>
+
+      <div class="wcpl-grid">
+        <div class="wcpl-price"><div class="wcpl-price-name">Small window</div><div class="wcpl-price-value" data-price="small"></div><div class="wcpl-price-note">Guide value per pane/window</div></div>
+        <div class="wcpl-price"><div class="wcpl-price-name">Standard window</div><div class="wcpl-price-value" data-price="standard"></div><div class="wcpl-price-note">Guide value per window</div></div>
+        <div class="wcpl-price"><div class="wcpl-price-name">Large / picture window</div><div class="wcpl-price-value" data-price="large"></div><div class="wcpl-price-note">Guide value per window</div></div>
+        <div class="wcpl-price"><div class="wcpl-price-name">Bay window</div><div class="wcpl-price-value" data-price="bay"></div><div class="wcpl-price-note">Typical bay weighting</div></div>
+        <div class="wcpl-price"><div class="wcpl-price-name">Velux / roof window</div><div class="wcpl-price-value" data-price="velux"></div><div class="wcpl-price-note">Normal accessible roof window</div></div>
+        <div class="wcpl-price"><div class="wcpl-price-name">French / patio doors</div><div class="wcpl-price-value" data-price="french"></div><div class="wcpl-price-note">Typical door-set guide</div></div>
+        <div class="wcpl-price"><div class="wcpl-price-name">Sash / mullioned</div><div class="wcpl-price-value" data-price="detail"></div><div class="wcpl-price-note">More detailed glazing</div></div>
+        <div class="wcpl-price"><div class="wcpl-price-name">Bifold panel</div><div class="wcpl-price-value" data-price="bifold"></div><div class="wcpl-price-note">Per individual panel</div></div>
+      </div>
+
+      <div class="wcpl-minimum">
+        <div><strong>Typical minimum visit</strong><div class="wcpl-area">A minimum normally applies even to very small jobs.</div></div>
+        <strong id="wcpl-minimum"></strong>
+      </div>
+
+      <div class="wcpl-section">
+        <h4>Inside window cleaning</h4>
+        <div class="wcpl-two">
+          <div class="wcpl-info"><strong>Inside-only price:</strong> we do not model inside glass below the equivalent exterior job. A normal home is typically around <strong>1.2× the equivalent outside labour</strong>, with awkward access often higher.</div>
+          <div class="wcpl-info">Example for about 10 standard windows in this area:<br><span class="wcpl-highlight" id="wcpl-inside-example"></span><br><span id="wcpl-inside-total"></span></div>
+        </div>
+      </div>
+
+      <div class="wcpl-section">
+        <h4>Conservatory guide</h4>
+        <div class="wcpl-grid">
+          <div class="wcpl-price"><div class="wcpl-price-name">Large side pane</div><div class="wcpl-price-value" id="wcpl-cons-side"></div><div class="wcpl-price-note">Exterior, per large pane</div></div>
+          <div class="wcpl-price"><div class="wcpl-price-name">Exterior roof</div><div class="wcpl-price-value" id="wcpl-cons-roof"></div><div class="wcpl-price-note">Starting/minimum guide</div></div>
+          <div class="wcpl-price"><div class="wcpl-price-name">Inside roof</div><div class="wcpl-price-value" id="wcpl-cons-inroof"></div><div class="wcpl-price-note">Starting/minimum guide</div></div>
+          <div class="wcpl-price"><div class="wcpl-price-name">Standard roof panel</div><div class="wcpl-price-value" id="wcpl-cons-panel"></div><div class="wcpl-price-note">Before setup/minimum</div></div>
+        </div>
+      </div>
+
+      <div id="wcpl-wales-note"></div>
+
+      <p class="wcpl-disclaimer">These are local guide values within a normal whole-property quote, not guaranteed stand-alone prices. The full quote can also change with minimum visit price, number of windows, height, access, first-clean condition, parking/travel and unusual glass.</p>
+
+      <div class="wcpl-footer">
+        <a href="https://windowcleaningcalculator.co.uk/" class="wcpl-linkbtn wcpl-orange">Price a whole property →</a>
+        <div class="wcpl-built">Built by <a href="https://uktradewebsites.co.uk/" target="_blank" rel="noopener">UK Trade Websites</a></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (() => {
+    const root=document.getElementById('wcpl-app');
+    if(!root) return;
+
+    const BASE={
+      setup:2.50, minimum:13,
+      windows:{small:.75,standard:1.25,large:2.25,bay:3.25,velux:2,french:2.50,detail:1.75,bifold:1.25},
+      frequency:{4:1,6:1.08,8:1.20,12:1.35}
+    };
+
+    const REGION_MARKET={
+      'London':1.22,'South East':1.10,'East of England':1.06,'South West':1.04,
+      'West Midlands':.96,'East Midlands':.95,'North West':.94,'Yorkshire and The Humber':.92,
+      'North East':.88,'Wales':.88,'Scotland':.91,'Northern Ireland':.90
+    };
+
+    const DISTRICT_MARKET={
+      'Westminster':1.30,'Kensington and Chelsea':1.30,'Camden':1.27,'Hammersmith and Fulham':1.25,
+      'Richmond upon Thames':1.25,'Wandsworth':1.22,'Islington':1.23,'Kingston upon Thames':1.20,
+      'Barnet':1.18,'Harrow':1.16,'Bromley':1.16,'Elmbridge':1.22,'Waverley':1.18,'Guildford':1.17,
+      'Epsom and Ewell':1.20,'Mole Valley':1.17,'Tandridge':1.16,'Reigate and Banstead':1.14,
+      'Cotswold':1.18,'Cheltenham':1.08,'Stroud':1.05,'Bath and North East Somerset':1.12,
+      'Oxford':1.18,'South Oxfordshire':1.17,'Vale of White Horse':1.11,'West Oxfordshire':1.13,'Cherwell':1.06,
+      'Cambridge':1.15,'South Cambridgeshire':1.13,'Chelmsford':1.09,'Brentwood':1.16,'Epping Forest':1.15,
+      'Trafford':1.12,'Cheshire East':1.07,'Brighton and Hove':1.12,'Edinburgh, City of':1.12,
+      'City of Edinburgh':1.12,'East Lothian':1.05,'Belfast':.98,
+      'Cardiff':.92,'Vale of Glamorgan':.96,'Caerphilly':.86,'Rhondda Cynon Taf':.82,
+      'Merthyr Tydfil':.82,'Blaenau Gwent':.80,'Torfaen':.86,'Neath Port Talbot':.86,
+      'Swansea':.90,'Carmarthenshire':.88,'Ceredigion':.89,'Pembrokeshire':.94,'Monmouthshire':1
+    };
+
+    const OUTCODE_MARKET={
+      'GL7':1.18,'GL54':1.18,'GL55':1.18,'GL56':1.16,'GL8':1.13,
+      'OX1':1.20,'OX2':1.21,'OX3':1.18,'OX20':1.15,'OX29':1.12,
+      'BA1':1.16,'BA2':1.12,'GU25':1.28,'KT10':1.25,'KT11':1.24,'KT13':1.25,'TW10':1.25,
+      'CM13':1.14,'CM14':1.14,'CM15':1.14,'CM1':1.09,'CM2':1.09,
+      'WA14':1.13,'WA15':1.13,'SK9':1.14,'SK10':1.10,'HG1':1.10,'HG2':1.10,
+      'YO1':1.08,'YO24':1.08,'LA22':1.16,'LA23':1.15,'TR26':1.20,'PL28':1.18,
+      'TQ8':1.20,'TQ6':1.15,'BH13':1.30,'SA3':1.12,'SA70':1.08,'LL53':1.08,'EH3':1.16,'BT9':1.08,
+      'NP24':.78,'NP23':.78,'NP13':.80,'NP12':.80,'CF81':.80,'CF82':.84,
+      'CF47':.82,'CF48':.82,'CF44':.82,'CF45':.82,'CF46':.82,'CF40':.82,'CF41':.82,'CF42':.82,'CF43':.82,'CF39':.82,'CF37':.84
+    };
+
+    const AREA_FALLBACK={
+      'GL':1.03,'SN':.96,'BS':1.03,'BA':1.08,'OX':1.12,'RG':1.08,'GU':1.12,'KT':1.15,'TW':1.14,
+      'SL':1.10,'HP':1.10,'AL':1.10,'CB':1.08,'CM':1.05,'SS':1,'CO':.98,'IP':.98,'NR':.94,
+      'M':.94,'SK':1.04,'WA':1,'L':.92,'CH':.98,'PR':.92,'BB':.88,'BL':.90,'OL':.89,
+      'HX':.90,'HD':.91,'LS':.97,'YO':1.02,'HG':1.07,'S':.92,'NG':.94,'DE':.94,'LE':.94,
+      'B':.96,'CV':.98,'NN':.97,'MK':1.04,'LU':1.02,'PE':.94,'NE':.90,'DH':.88,'SR':.88,
+      'TS':.88,'DL':.90,'CA':.92,'LA':1,'EX':.99,'TQ':1.02,'PL':.97,'TR':1.03,'BH':1.04,
+      'SO':1.06,'PO':1.03,'BN':1.10,'RH':1.12,'TN':1.08,'ME':1.02,'DA':1.05,'BR':1.12,'CR':1.08,
+      'CF':.88,'SA':.90,'NP':.86,'LL':.90,'SY':.90,'LD':.86,'HR':.96,
+      'EH':1.03,'G':.93,'AB':.94,'DD':.91,'FK':.93,'KY':.92,'PH':.96,'IV':.94,'PA':.92,
+      'BT':.90,'E':1.17,'N':1.17,'NW':1.22,'SE':1.17,'SW':1.24,'W':1.28,'WC':1.30,'EC':1.30
+    };
+
+    const CITY_FRICTION={
+      'OX1':1.08,'BA1':1.06,'BS1':1.06,'BS2':1.05,'BS8':1.05,
+      'M1':1.05,'M2':1.05,'M3':1.05,'M4':1.05,'CF10':1.04,'CF11':1.04,
+      'EH1':1.06,'EH2':1.06,'EH3':1.06,'G1':1.06,'G2':1.06,'G3':1.06,'G4':1.06,'G5':1.06,
+      'BT1':1.04,'BT2':1.04,'CB1':1.04,'CB2':1.04,'CB3':1.04,'CB4':1.04,'CB5':1.04,
+      'BN1':1.06,'BN2':1.06,'BH1':1.04,'BH2':1.04,'NE1':1.04,'S1':1.04,'BD1':1.04,'PO1':1.04,
+      'B1':1.05,'B2':1.05,'B3':1.05,'B4':1.05,'B5':1.05
+    };
+
+    const LOW_WALES_OUTCODES=new Set(['NP24','NP23','NP13','NP12','CF81','CF82','CF47','CF48','CF44','CF45','CF46','CF40','CF41','CF42','CF43','CF39','CF37']);
+    const LOW_WALES_DISTRICTS=new Set(['Caerphilly','Rhondda Cynon Taf','Merthyr Tydfil','Blaenau Gwent']);
+    const CENTRAL_LONDON=/^(?:W1[A-Z]?|WC[12][A-Z]?|SW1[A-Z]?|EC[1-4][A-Z]?|SE1)$/;
+
+    let state={postcode:'',location:null,freq:'4'};
+
+    const $=s=>root.querySelector(s);
+    const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+    const normalise=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+    const isFull=v=>/^(GIR0AA|[A-Z]{1,2}\d[A-Z\d]?\d[A-Z]{2})$/.test(normalise(v));
+    const format=v=>{const p=normalise(v);return isFull(p)?`${p.slice(0,-3)} ${p.slice(-3)}`:p};
+    const areaCode=v=>(normalise(v).match(/^[A-Z]{1,2}/)||[''])[0];
+    const outcode=v=>{
+      const raw=String(v||'').toUpperCase().trim(),p=normalise(raw);
+      if(!p)return '';
+      if(isFull(p))return p.slice(0,-3);
+      const first=normalise((raw.split(/[\s\-]+/).filter(Boolean)[0]||''));
+      if(/^[A-Z]{1,2}\d[A-Z\d]?$/.test(first))return first;
+      if(/^[A-Z]{1,2}\d[A-Z\d]?$/.test(p))return p;
+      return '';
+    };
+    const money=n=>new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP',maximumFractionDigits:2,minimumFractionDigits:n<10?2:0}).format(Math.max(0,n));
+
+    function factors(){
+      const raw=state.postcode;
+      const out=(state.location?.outcode||outcode(raw)).toUpperCase();
+      const area=areaCode(raw);
+      let market=1,reason='UK average';
+
+      if(state.location){
+        const district=state.location.admin_district||state.location.parish||'';
+        const region=state.location.region||state.location.country||'';
+        market=REGION_MARKET[region]||REGION_MARKET[state.location.country]||1;
+        reason=region||state.location.country||reason;
+        if(DISTRICT_MARKET[district]){market=DISTRICT_MARKET[district];reason=district}
+      }else if(AREA_FALLBACK[area]){
+        market=AREA_FALLBACK[area];reason=`${area} postcode area`;
+      }
+
+      if(OUTCODE_MARKET[out]){market=OUTCODE_MARKET[out];reason=`${out} local market`}
+      market=clamp(market,.75,1.30);
+
+      let friction=1;
+      if(CENTRAL_LONDON.test(out))friction=1.15;
+      else if(CITY_FRICTION[out])friction=CITY_FRICTION[out];
+      else if(state.location?.region==='London')friction=1.05;
+
+      const combined=clamp(market*friction,.75,1.50);
+      const lowWales=LOW_WALES_OUTCODES.has(out)||LOW_WALES_DISTRICTS.has(state.location?.admin_district||'');
+      const isWales=lowWales||state.location?.country==='Wales'||state.location?.region==='Wales'||['CF','NP','SA','LL','LD'].includes(area);
+      const minimum=lowWales?10:isWales?11:13;
+      return {out,area,market,friction,combined,reason,lowWales,isWales,minimum};
+    }
+
+    function render(){
+      const f=factors(),freq=BASE.frequency[state.freq]||1;
+      const unit=(base)=>base*f.combined*freq;
+      const min= f.minimum*f.combined*freq;
+
+      root.querySelectorAll('[data-price]').forEach(el=>{
+        el.textContent=money(unit(BASE.windows[el.dataset.price]));
+      });
+      $('#wcpl-minimum').textContent=money(min);
+
+      const exampleExterior=Math.max(BASE.setup+10*BASE.windows.standard,f.minimum)*freq*f.combined;
+      const inside=exampleExterior*1.20;
+      $('#wcpl-inside-example').textContent=`Inside about ${money(inside)}`;
+      $('#wcpl-inside-total').textContent=`Inside + outside about ${money(exampleExterior+inside)} for this simple example.`;
+
+      $('#wcpl-cons-side').textContent=money(5*f.combined);
+      $('#wcpl-cons-roof').textContent=`from ${money(50*f.combined)}`;
+      $('#wcpl-cons-inroof').textContent=`from ${money(75*f.combined)}`;
+      $('#wcpl-cons-panel').textContent=money(5*f.combined);
+
+      const label=state.location?.admin_district||state.location?.region||f.reason;
+      $('#wcpl-title').textContent=f.out?`Typical pricing around ${f.out}`:'Typical UK pricing';
+      $('#wcpl-area').textContent=label?`${label} · based on our current local pricing model`:'Based on our current UK pricing model';
+
+      let marketText='Around UK average';
+      if(f.combined<=.84)marketText='Lower-cost market';
+      else if(f.combined<.96)marketText='Below-average market';
+      else if(f.combined<=1.06)marketText='Around average';
+      else if(f.combined<=1.16)marketText='Above-average market';
+      else if(f.combined<=1.28)marketText='Premium market';
+      else marketText='High-cost market';
+      $('#wcpl-market-badge').textContent=marketText;
+
+      $('#wcpl-wales-note').innerHTML=f.lowWales
+        ? `<div class="wcpl-wales"><strong>Lower-priced local market:</strong> this area is deliberately below the UK baseline in our current model. Long-established rounds can still be cheaper than the figures shown.</div>`
+        : '';
+
+      $('#wcpl-results').classList.add('show');
+    }
+
+    async function lookup(raw){
+      state.postcode=raw;
+      state.location=null;
+      const clean=normalise(raw);
+      const status=$('#wcpl-status');
+
+      if(!clean){
+        status.textContent='Enter a postcode, outward code or postcode area first.';
+        status.className='wcpl-status warn';return;
+      }
+
+      if(isFull(clean)){
+        const canonical=format(clean);
+        $('#wcpl-postcode').value=canonical;
+        status.textContent='Checking local area…';status.className='wcpl-status';
+        try{
+          const r=await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(clean)}`);
+          const data=await r.json();
+          if(data.status===200&&data.result){
+            state.postcode=data.result.postcode||canonical;
+            state.location=data.result;
+            status.textContent=`✓ Local pricing found: ${data.result.admin_district||data.result.region||'UK'}.`;
+            status.className='wcpl-status good';
+            render();return;
+          }
+        }catch(e){}
+        status.textContent=`✓ We'll use ${outcode(clean)} pricing. Exact postcode lookup was unavailable.`;
+        status.className='wcpl-status warn';render();return;
+      }
+
+      const out=outcode(raw);
+      const area=areaCode(raw);
+      if(out){
+        state.postcode=out;$('#wcpl-postcode').value=out;
+        status.textContent=`✓ Using ${out} local pricing. Add the full postcode for a tighter local adjustment.`;
+        status.className='wcpl-status good';render();return;
+      }
+      if(area){
+        state.postcode=area;$('#wcpl-postcode').value=area;
+        status.textContent=`✓ Using average ${area} postcode-area pricing.`;
+        status.className='wcpl-status good';render();return;
+      }
+      status.textContent='We could not recognise that postcode. Try something like GL7 6NH, GL7 or GL.';
+      status.className='wcpl-status warn';
+    }
+
+    $('#wcpl-check').addEventListener('click',()=>lookup($('#wcpl-postcode').value));
+    $('#wcpl-postcode').addEventListener('keydown',e=>{if(e.key==='Enter')lookup(e.target.value)});
+
+    root.querySelectorAll('.wcpl-pill').forEach(btn=>btn.addEventListener('click',()=>{
+      state.freq=btn.dataset.freq;
+      root.querySelectorAll('.wcpl-pill').forEach(b=>b.classList.toggle('active',b===btn));
+      if($('#wcpl-results').classList.contains('show'))render();
+    }));
+
+    $('#wcpl-locate').addEventListener('click',()=>{
+      const status=$('#wcpl-status');
+      if(!navigator.geolocation){
+        status.textContent='Location is not available in this browser. Enter a postcode instead.';
+        status.className='wcpl-status warn';return;
+      }
+      status.textContent='Finding your nearest postcode…';status.className='wcpl-status';
+      navigator.geolocation.getCurrentPosition(async pos=>{
+        try{
+          const {longitude,latitude}=pos.coords;
+          const r=await fetch(`https://api.postcodes.io/postcodes?lon=${encodeURIComponent(longitude)}&lat=${encodeURIComponent(latitude)}&limit=1&radius=2000`);
+          const data=await r.json();
+          const nearest=data.result?.[0];
+          if(!nearest)throw new Error();
+          $('#wcpl-postcode').value=nearest.postcode;
+          await lookup(nearest.postcode);
+        }catch(e){
+          status.textContent='We could not find a nearby postcode. Enter one manually instead.';
+          status.className='wcpl-status warn';
+        }
+      },()=>{
+        status.textContent='Location permission was not granted. Postcode entry still works.';
+        status.className='wcpl-status warn';
+      },{enableHighAccuracy:false,timeout:8000,maximumAge:300000});
+    });
+  })();
+  </script>
+</div>
