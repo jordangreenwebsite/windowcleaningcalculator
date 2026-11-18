@@ -1835,7 +1835,21 @@ Free to use · No account needed · Local pricing
     };
   }
 
+  // Report only whitelisted activity; do not copy emails, addresses, estimates or feedback text.
+  function reportPortalActivity(action,payload){
+    const eventTypes={save_calculation:'calculation',email_result:'email_result_request',cleaner_feedback:'cleaner_feedback'};
+    const eventType=eventTypes[action];
+    if(!eventType||!payload.calc_id)return;
+    const events=[eventType];
+    if(action==='email_result'&&payload.marketing_consent===true)events.push('marketing_opt_in');
+    for(const event_type of events){
+      fetch('/api/calculator-activity',{method:'POST',credentials:'same-origin',keepalive:true,
+        headers:{'Content-Type':'application/json'},body:JSON.stringify({external_id:payload.calc_id,event_type})}).catch(()=>{});
+    }
+  }
+
   async function submitBackend(action,payload){
+    reportPortalActivity(action,payload);
     if(!CONFIG.appsScriptUrl || CONFIG.appsScriptUrl.includes('PASTE_YOUR')){
       if(CONFIG.debug) console.log('[WCC test mode]',action,payload);
       return false;
