@@ -25,6 +25,10 @@ for(const route of routes){
  if(JSON.stringify(externalScripts(original))!==JSON.stringify(externalScripts(rendered)))errors.push('Original interactive scripts changed on '+path);
  if(JSON.stringify(cssLinks(original))!==JSON.stringify(cssLinks(rendered)))errors.push('Original CSS stylesheets changed on '+path);
  const clean=stripScripts(rendered);
+ // The Guides hub must be in the main navigation instead of the original placeholder.
+ const guideLinks=[...clean.matchAll(/<a\b[^>]*>[\s\S]*?<\/a>/gi)].map(m=>m[0]).filter(a=>['Guides','View All Guides'].includes(a.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim()));
+ if(!guideLinks.some(a=>a.includes('href="/guides/"'))||guideLinks.some(a=>!a.includes('href="/guides/"')))errors.push('Guides link missing or incorrect on '+path);
+
  const h1s=[...clean.matchAll(/<h1\b[^>]*>/gi)].length;
  if(h1s!==1)errors.push(path+' expected one H1, got '+h1s);
  else correctedHeadings++;
@@ -99,6 +103,8 @@ if(!guide.includes('id="wcpl-app"'))errors.push('Local price checker missing');
 const robots=read('dist/robots.txt');
 if(!/User-agent:\s*\*/i.test(robots)||!/Allow:\s*\//i.test(robots)||/Disallow:\s*\/(?:\s|$)/i.test(robots))errors.push('robots.txt does not allow crawling');
 const sitemap=read('dist/sitemap.xml');
+if(!existsSync('dist/guides/index.html'))errors.push('Missing guides hub');
+if(!sitemap.includes('<loc>'+BASE+'/guides/</loc>'))errors.push('Missing guides hub in sitemap');
 for(const route of ['',...legacyRoutes.filter(r=>!r.startsWith('author/'))]){
  const uri=BASE+'/'+(route?route+'/':'');
  if(!sitemap.includes('<loc>'+uri+'</loc>'))errors.push('Sitemap missing '+uri);

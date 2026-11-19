@@ -76,11 +76,16 @@ function outsideScripts(markup,fn) {
  }
  return result+fn(markup.slice(cursor));
 }
+function activateGuideLinks(markup){
+ return markup.replace(/<a\b[^>]*>[\s\S]*?<\/a>/gi,anchor=>{
+  const label=anchor.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  if(label!=='Guides'&&label!=='View All Guides') return anchor;
+  return anchor.replace(/(\bhref=)(["'])[^"']*\2/i, '$1"/guides/"').replace('data-type=""','data-type="url"');
+ });
+}
 function patchMarkup(markup,route){
  let changed=markup;
- // Activate the previously placeholder Guides navigation without changing the existing visual markup.
- changed=changed.replace(/(<a\\b[^>]*?href=["'])#["']([^>]*>\\s*Guides\\s*<\\/a>)/gi, '$1/guides/"$2');
- changed=changed.replace(/(<a\\b[^>]*?href=["'])#calculator(["'][^>]*>\\s*<span[^>]*>View All Guides<\\/span>)/gi,'$1/guides/$2');
+ changed=activateGuideLinks(changed);
  // Correct real links, while leaving labels, nodes and classes alone.
  changed=changed.replace(/\bhref=(["'])([^"']+)\1/gi,(whole,quote,href)=>{
   if(href==='http://linkedin.com/')return 'href='+quote+'https://www.linkedin.com/'+quote;
