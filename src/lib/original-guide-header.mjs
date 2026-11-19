@@ -10,9 +10,9 @@ if(!rawHeader)throw Error('Original calculator header not found');
 const linkTags=[...home.matchAll(/<link[^>]*rel=["']stylesheet["'][^>]*>/gi)].map(m=>m[0]);
 const styles=linkTags.filter(tag=>/normalize\.min\.css|awesome-menu\.css|fonts\.googleapis|post-17-defaults\.css|global-settings\.css|post-17\.css/.test(tag)).join('\n');
 const blocks=[...home.matchAll(/<script\b[^>]*>[\s\S]*?<\/script>/gi)].map(m=>m[0]);
-const deps=blocks.filter(tag=>/^<script src=/.test(tag)&&/breakdance-utils\.js|header-builder\.js|awesome-menu\.js/.test(tag));
-const setup=blocks.filter(tag=>/window\.BreakdanceFrontend\.data\s*=|new BreakdanceHeaderBuilder\(|new AwesomeMenu\(/.test(tag)).map(tag=>tag.replace(/http:\\\/\\\/windowcleaningcalculator\.local/g,'https:\\/\\/windowcleaningcalculator.co.uk'));
-if(deps.length!==3||setup.length!==3||styles.split('\n').length!==6)throw Error('Original calculator header assets changed; review needed');
+const deps=blocks.filter(tag=>/^<script src=/.test(tag)&&/breakdance-utils\.js|header-builder\.js|awesome-menu\.js|rough-notation\.iife\.js|dual-heading\.js/.test(tag));
+const setup=blocks.filter(tag=>/window\.BreakdanceFrontend\.data\s*=|new BreakdanceHeaderBuilder\(|new AwesomeMenu\(|new BreakdanceDualHeading\(\s*['"]\.breakdance \.bde-dual-heading-17-135['"]/.test(tag)).map(tag=>tag.replace(/http:\\\/\\\/windowcleaningcalculator\.local/g,'https:\\/\\/windowcleaningcalculator.co.uk'));
+if(deps.length!==5||setup.length!==4||styles.split('\n').length!==6)throw Error('Original calculator header assets changed; review needed');
 const pricingChildren=legacyRoutes.filter(p=>p.startsWith('window-cleaning-prices-uk/'));
 const fixes=new Map(pricingChildren.map(p=>['/'+p.split('/').pop()+'/','/'+p+'/']));
 let header=rawHeader.replace(/<\/?h1\b/gi,tag=>tag.replace(/h1/i,'h2'))

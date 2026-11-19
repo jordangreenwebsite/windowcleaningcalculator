@@ -116,7 +116,7 @@ for(const route of ['/home/','/window-cleaning-cost-per-window/','/inside-window
 }
 
 const newGuidePage=read('dist/guides/index.html');
-for(const marker of ['bde-header-builder-17-100','menu-116','Window Cleaning Calculator','Built by UK Trade Websites','For Window Cleaners','Find a Window Cleaner','Commercial Window Cleaning Cost','new AwesomeMenu','post-17.css']){
+for(const marker of ['bde-header-builder-17-100','menu-116','Window Cleaning Calculator','Built by UK Trade Websites','For Window Cleaners','Find a Window Cleaner','Commercial Window Cleaning Cost','new AwesomeMenu','post-17.css','rough-notation.iife.js','dual-heading.js','new BreakdanceDualHeading','js-annotate']){
  if(!newGuidePage.includes(marker))errors.push('Original guide header missing '+marker);
 }
 if(!newGuidePage.includes('href="/guides/"'))errors.push('Guides header does not link to hub');
