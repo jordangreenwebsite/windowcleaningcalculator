@@ -114,6 +114,14 @@ const reds=read('dist/_redirects');
 for(const route of ['/home/','/window-cleaning-cost-per-window/','/inside-window-cleaning-cost/']){
  if(!reds.includes(route))errors.push('Legacy redirect missing '+route);
 }
+
+const newGuidePage=read('dist/guides/index.html');
+for(const marker of ['bde-header-builder-17-100','menu-116','Window Cleaning Calculator','Built by UK Trade Websites','For Window Cleaners','Find a Window Cleaner','Commercial Window Cleaning Cost','new AwesomeMenu','post-17.css']){
+ if(!newGuidePage.includes(marker))errors.push('Original guide header missing '+marker);
+}
+if(!newGuidePage.includes('href="/guides/"'))errors.push('Guides header does not link to hub');
+if(!newGuidePage.includes('href="/#calculator"'))errors.push('Guides header does not link to calculator');
+
 if(errors.length){console.error([...new Set(errors)].join('\n'));process.exit(1);}
 console.log('SEO verification passed on '+routes.length+' Astro pages: '+correctedHeadings+
  ' unique-H1 pages, '+checkedImages+' images with alt attributes, '+schemaChecked+' schema graphs and '+linksChecked+' internal page links.');
