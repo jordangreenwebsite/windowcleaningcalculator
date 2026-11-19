@@ -78,6 +78,9 @@ function outsideScripts(markup,fn) {
 }
 function patchMarkup(markup,route){
  let changed=markup;
+ // Activate the previously placeholder Guides navigation without changing the existing visual markup.
+ changed=changed.replace(/(<a\\b[^>]*?href=["'])#["']([^>]*>\\s*Guides\\s*<\\/a>)/gi, '$1/guides/"$2');
+ changed=changed.replace(/(<a\\b[^>]*?href=["'])#calculator(["'][^>]*>\\s*<span[^>]*>View All Guides<\\/span>)/gi,'$1/guides/$2');
  // Correct real links, while leaving labels, nodes and classes alone.
  changed=changed.replace(/\bhref=(["'])([^"']+)\1/gi,(whole,quote,href)=>{
   if(href==='http://linkedin.com/')return 'href='+quote+'https://www.linkedin.com/'+quote;

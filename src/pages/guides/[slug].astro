@@ -1,0 +1,10 @@
+---
+import GuideLayout from '../../components/GuideLayout.astro';
+import {guidePosts} from '../../data/guide-posts.mjs';
+export function getStaticPaths(){return guidePosts.map(post=>({params:{slug:post.slug},props:{post}}));}
+const {post}=Astro.props;
+---
+<GuideLayout title={post.title} description={post.description} path={'/guides/'+post.slug+'/'} image={post.image} article={post}>
+<section class="hero"><div class="wrap"><p class="eyebrow">{post.category}</p><h1>{post.title}</h1><p>{post.description}</p><time datetime={post.date}>{new Date(post.date+'T12:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})}</time></div></section>
+<article class="reading"><img src={post.image} alt={post.imageAlt} width="1200" height="675" decoding="async"/><Fragment set:html={post.bodyHtml}/><p><a class="button" href="/#calculator">Calculate a price</a></p><p><a href="/guides/">Explore more guides</a></p></article>
+</GuideLayout>
